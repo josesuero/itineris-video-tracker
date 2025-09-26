@@ -1,15 +1,9 @@
-import torch
 from ultralytics import YOLO
+from utils_device import get_device
 
 class Detector:
     def __init__(self, model_path="yolov8n.pt", conf=0.35):
-        if torch.cuda.is_available():
-            self.device = "cuda"
-        elif torch.backends.mps.is_available():
-            self.device = "mps"
-        else:
-            self.device = "cpu"
-
+        self.device = get_device()
         print(f"[Detector] Using device: {self.device}")
         self.model = YOLO(model_path)
         self.conf = conf
@@ -19,7 +13,7 @@ class Detector:
             frame,
             conf=self.conf,
             verbose=False,
-            device=self.device  # automatic CPU/GPU switch
+            device=self.device
         )[0]
 
         detections = []
